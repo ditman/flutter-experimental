@@ -21,7 +21,7 @@ class Counter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final int viewId = View.of(context).viewId;
-    final InitialData? data = ui_web.viewRegistry.getInitialData(viewId) as InitialData?;
+    final InitialData? data = ui_web.viewsProxy.getInitialData(viewId) as InitialData?;
     return MaterialApp(
       title: 'Multi-counter Demo',
       theme: ThemeData(
@@ -49,10 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    print('Initial data:');
-    print('Random UUID: ${widget.data?.randomUUID}');
-    print('Random int: ${widget.data?.randomInt}');
-    print('Array of famous numbers: ${widget.data?.decimals.map((e) => e.toStringAsFixed(4))}');
+    print('Initial data: ${widget.data?.toDart}');
   }
 
   void _incrementCounter() {

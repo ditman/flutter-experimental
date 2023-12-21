@@ -17,4 +17,6 @@ extension InitialDataExtension on InitialData {
   @JS('decimals')
   external JSArray<JSNumber> get _decimals;
   List<double> get decimals => _decimals.toDart.map((JSNumber e) => e.toDartDouble).toList();
+
+  Object? get toDart => (this as JSAny).dartify();
 }
