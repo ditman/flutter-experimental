@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base href="$FLUTTER_BASE_HREF">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="Multi-counter web demo">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="multi_counter">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>Multi-counter</title>
+  <link rel="manifest" href="manifest.json">
+
+  <!-- This script adds the flutter initialization JS code -->
+  <script src="flutter.js" defer></script>
+  <style>
+    * { box-sizing: border-box; font-family: Helvetica, Arial, sans-serif; }
+    .app_bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.5);
+      position: sticky;
+      top: 0px;
+      z-index: 1;
+    }
+    .counter_grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+    }
+    .counter_cel {
+      width: 320px;
+      height: 240px;
+      box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2);
+    }
+  </style>
+</head>
+<body>
+  <nav class="app_bar">
+    <h1>Multi-counter Demo</h1>
+    <div class="counter_manager">
+      <button id="add_counter" disabled>Add a counter</button>
+      <button id="remove_last_counter" disabled>Remove last counter</button>
+    </div>
+  </nav>
+  <div class="counter_grid" id="counter_grid">
+  </div>
+  <script>
+    window.addEventListener('load', function(ev) {
+      let viewIds = [];
+      let flutterApp = new Promise((resolve, reject) => {
+        _flutter.loader.loadEntrypoint({
+          onEntrypointLoaded: async function(engineInitializer) {
+            let engine = await engineInitializer.initializeEngine({
+              multiViewEnabled: true,
+            });
+            let app = engine.runApp();
+            add_counter.disabled = false;
+            resolve(app);
+          }
+        });
+      });
+      add_counter.addEventListener('click', async function() {
+        // Create a new element, and add a flutter view there...
+        let newElement = document.createElement('div');
+        newElement.classList.add('counter_cel');
+        counter_grid.appendChild(newElement);
+        let viewId = await (await flutterApp).addView({
+          hostElement: newElement,
+        });
+        console.log('Added view ID', viewId);
+        viewIds.push(viewId);
+        remove_last_counter.disabled = viewIds.length == 0;
+      });
+      remove_last_counter.addEventListener('click', async function() {
+        let viewId = viewIds.pop();
+        if (viewId) {
+          let viewConfig = await (await flutterApp).removeView(viewId);
+          console.log('Removing view with ID', viewId, 'and config', viewConfig);
+          viewConfig.hostElement.remove();
+        }
+        remove_last_counter.disabled = viewIds.length == 0;
+      });
+    });
+  </script>
+</body>
+</html>
