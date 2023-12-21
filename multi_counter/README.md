@@ -4,6 +4,6 @@ A web app that renders multiple instances
 of flutter's counter app in a grid-layout
 page.
 
-Needs the following branch:
+Needs an engine newer than:
 
-* https://github.com/ditman/flutter-engine/tree/deferred-platform-view-injection
+* https://github.com/ditman/flutter-engine/tree/web-only-initial-data-getter

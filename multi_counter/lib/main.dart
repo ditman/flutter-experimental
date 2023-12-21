@@ -1,4 +1,10 @@
+// Copyright 2014 The Flutter Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import 'dart:ui_web' as ui_web;
+
 import 'package:flutter/material.dart';
+import 'src/initial_data.dart';
 import 'src/multiview.dart';
 
 final List<Color> colors = List.from(Colors.primaries)..shuffle();
@@ -15,21 +21,23 @@ class Counter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final int viewId = View.of(context).viewId;
+    final InitialData? data = ui_web.viewRegistry.getInitialData(viewId) as InitialData?;
     return MaterialApp(
       title: 'Multi-counter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: colors[viewId%colors.length]),
         useMaterial3: true,
       ),
-      home: MyHomePage(title: 'Counter View $viewId'),
+      home: MyHomePage(title: 'Counter View $viewId', data: data),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  const MyHomePage({super.key, required this.title, this.data});
 
   final String title;
+  final InitialData? data;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -37,6 +45,15 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    print('Initial data:');
+    print('Random UUID: ${widget.data?.randomUUID}');
+    print('Random int: ${widget.data?.randomInt}');
+    print('Array of famous numbers: ${widget.data?.decimals.map((e) => e.toStringAsFixed(4))}');
+  }
 
   void _incrementCounter() {
     setState(() {
@@ -46,6 +63,15 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final String uuidFromJs = widget.data?.randomUUID ?? 'null (Browser crypto not available?)';
+
+    final TextStyle? tiny = Theme.of(context).textTheme.bodySmall?.copyWith(
+      color: Theme.of(context).colorScheme.secondary.withOpacity(0.5),
+    );
+    final TextStyle? tinyBold = tiny?.copyWith(
+      fontWeight: FontWeight.bold,
+    );
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -61,6 +87,11 @@ class _MyHomePageState extends State<MyHomePage> {
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
+            ),
+            Text('RandomUUID from JS (initialData):', style: tiny),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 50), // Clear the FAB.
+              child: Text(uuidFromJs, style: tinyBold),
             ),
           ],
         ),

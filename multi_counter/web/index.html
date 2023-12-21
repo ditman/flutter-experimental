@@ -78,6 +78,11 @@
         counter_grid.appendChild(newElement);
         let viewId = await (await flutterApp).addView({
           hostElement: newElement,
+          initialData: {
+            randomInt: Math.floor(Math.random() * 100),
+            randomUUID: globalThis.crypto.randomUUID(),
+            decimals: [Math.PI, Math.E, Math.SQRT2],
+          }
         });
         console.log('Added view ID', viewId);
         viewIds.push(viewId);
