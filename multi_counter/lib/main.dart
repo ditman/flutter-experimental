@@ -1,8 +1,6 @@
 // Copyright 2014 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-import 'dart:ui_web' as ui_web;
-
 import 'package:flutter/material.dart';
 import 'src/initial_data.dart';
 import 'src/multiview.dart';
@@ -21,7 +19,7 @@ class Counter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final int viewId = View.of(context).viewId;
-    final InitialData? data = ui_web.viewsProxy.getInitialData(viewId) as InitialData?;
+    final InitialData? data = InitialData.forView(viewId);
     return MaterialApp(
       title: 'Multi-counter Demo',
       theme: ThemeData(
