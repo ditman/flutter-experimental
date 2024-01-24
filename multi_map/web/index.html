@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base href="$FLUTTER_BASE_HREF">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="Multi-map web demo">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="multi_map">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>Multi-maps</title>
+  <link rel="manifest" href="manifest.json">
+  
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBYsDdi5vYcoQoxqkEVrM-8QQI45rieMUA"></script>
+
+  <!-- This script adds the flutter initialization JS code -->
+  <script src="flutter.js" defer></script>
+  <style>
+    * { box-sizing: border-box; font-family: Helvetica, Arial, sans-serif; }
+    html { background:url(topo-pattern.png) repeat; }
+    .app_bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.5);
+      position: sticky;
+      top: 0px;
+      z-index: 1;
+    }
+    .map_grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+    }
+    .map_cel {
+      width: 320px;
+      height: 240px;
+      box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2);
+    }
+  </style>
+</head>
+<body>
+  <nav class="app_bar">
+    <h1>Multi-maps Demo</h1>
+    <div>
+      <button id="add_map" disabled>Add a map</button>
+      <button id="remove_last_map" disabled>Remove last map</button>
+    </div>
+  </nav>
+  <div class="map_grid" id="map_grid">
+  </div>
+  <script>
+    window.addEventListener('load', function(ev) {
+      let viewIds = [];
+      let flutterApp = new Promise((resolve, reject) => {
+        _flutter.loader.loadEntrypoint({
+          onEntrypointLoaded: async function(engineInitializer) {
+            let engine = await engineInitializer.initializeEngine({
+              multiViewEnabled: true,
+            });
+            let app = engine.runApp();
+            add_map.disabled = false;
+            resolve(app);
+          }
+        });
+      });
+
+      add_map.addEventListener('click', async function() {
+        // Create a new element, and add a flutter view there...
+        let newElement = document.createElement('div');
+        newElement.classList.add('map_cel');
+        map_grid.appendChild(newElement);
+
+        let viewId = await (await flutterApp).addView({
+          hostElement: newElement,
+        });
+
+        viewIds.push(viewId);
+        console.log('Added view ID', viewId);
+        // Handle enabling/disabling the remove_last button
+        remove_last_map.disabled = viewIds.length == 0;
+      });
+
+      remove_last_map.addEventListener('click', async function() {
+        let viewId = viewIds.pop();
+
+        if (viewId) {
+          let viewConfig = await (await flutterApp).removeView(viewId);
+          console.log('Removing view with ID', viewId, 'and config', viewConfig);
+          viewConfig.hostElement.remove();
+        }
+        // Handle enabling/disabling the remove_last button
+        remove_last_map.disabled = viewIds.length == 0;
+      });
+    });
+  </script>
+</body>
+</html>
