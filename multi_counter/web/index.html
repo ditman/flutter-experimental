@@ -54,19 +54,26 @@
       <button id="remove_last_counter" disabled>Remove last counter</button>
     </div>
   </nav>
-  <div class="counter_grid" id="counter_grid">
-  </div>
+  <div class="counter_grid" id="counter_grid"></div>
   <script>
     window.addEventListener('load', function(ev) {
       let viewIds = [];
+
+      function resetUi() {
+        viewIds = [];
+        counter_grid.replaceChildren();
+        remove_last_counter.disabled = true;
+        add_counter.disabled = false;
+      }
+
       let flutterApp = new Promise((resolve, reject) => {
         _flutter.loader.loadEntrypoint({
           onEntrypointLoaded: async function(engineInitializer) {
+            resetUi();
             let engine = await engineInitializer.initializeEngine({
               multiViewEnabled: true,
             });
             let app = engine.runApp();
-            add_counter.disabled = false;
             resolve(app);
           }
         });

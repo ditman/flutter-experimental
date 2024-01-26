@@ -57,19 +57,26 @@
       <button id="remove_last_map" disabled>Remove last map</button>
     </div>
   </nav>
-  <div class="map_grid" id="map_grid">
-  </div>
+  <div class="map_grid" id="map_grid"></div>
   <script>
     window.addEventListener('load', function(ev) {
       let viewIds = [];
+
+      function resetUi() {
+        viewIds = [];
+        map_grid.replaceChildren();
+        remove_last_map.disabled = true;
+        add_map.disabled = false;
+      }
+
       let flutterApp = new Promise((resolve, reject) => {
         _flutter.loader.loadEntrypoint({
           onEntrypointLoaded: async function(engineInitializer) {
+            resetUi();
             let engine = await engineInitializer.initializeEngine({
               multiViewEnabled: true,
             });
             let app = engine.runApp();
-            add_map.disabled = false;
             resolve(app);
           }
         });
