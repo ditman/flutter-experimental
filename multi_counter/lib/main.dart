@@ -8,7 +8,7 @@ import 'src/multiview.dart';
 final List<Color> colors = List.from(Colors.primaries)..shuffle();
 
 void main() {
-  runAppWithoutImplicitView(MultiViewApp(
+  runWidget(MultiViewApp(
     viewBuilder: (BuildContext context) => const Counter(),
   ));
 }

@@ -26,7 +26,7 @@ final List<LatLng> positions = List.from(<LatLng>[
 ])..shuffle();
 
 void main() {
-  runAppWithoutImplicitView(MultiViewApp(
+  runWidget(MultiViewApp(
     viewBuilder: (BuildContext context) => const Counter(),
   ));
 }
