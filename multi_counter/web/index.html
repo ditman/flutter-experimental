@@ -39,9 +39,7 @@
       justify-content: center;
       gap: 8px;
     }
-    .counter_cel {
-      width: 320px;
-      height: 240px;
+    .counter_cel:not(:empty) {
       box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2);
     }
   </style>
@@ -57,7 +55,58 @@
   <div class="counter_grid" id="counter_grid"></div>
   <script>
     window.addEventListener('load', function(ev) {
+      _flutter.loader.loadEntrypoint({
+        onEntrypointLoaded: async function(engineInitializer) {
+          resetUi();
+          let engine = await engineInitializer.initializeEngine({
+            multiViewEnabled: true,
+          });
+          onFlutterAppReady(await engine.runApp());
+        }
+      });
+
       let viewIds = [];
+
+      function onFlutterAppReady(flutterApp) {
+        add_counter.addEventListener('click', async function() {
+          // Create a new element, and add a flutter view there...
+          let newElement = document.createElement('div');
+          newElement.classList.add('counter_cel');
+          counter_grid.appendChild(newElement);
+
+          let viewId = flutterApp.mount({
+            hostElement: newElement,
+            viewConstraints: {
+              minWidth: 0,
+              maxWidth: 320,
+              minHeight: 0,
+              maxHeight: 240,
+            },
+            initialData: {
+              randomInt: Math.floor(Math.random() * 100),
+              randomUUID: globalThis.crypto.randomUUID(),
+              decimals: [Math.PI, Math.E, Math.SQRT2],
+            },
+          });
+
+          viewIds.push(viewId);
+          console.log('Added view ID', viewId);
+          // Handle enabling/disabling the remove_last button
+          remove_last_counter.disabled = viewIds.length == 0;
+        });
+
+        remove_last_counter.addEventListener('click', async function() {
+          let viewId = viewIds.pop();
+
+          if (viewId) {
+            let viewConfig = flutterApp.unmount(viewId);
+            console.log('Removing view with ID', viewId, 'and config', viewConfig);
+            viewConfig.hostElement.remove();
+          }
+          // Handle enabling/disabling the remove_last button
+          remove_last_counter.disabled = viewIds.length == 0;
+        });
+      }
 
       function resetUi() {
         viewIds = [];
@@ -65,52 +114,6 @@
         remove_last_counter.disabled = true;
         add_counter.disabled = false;
       }
-
-      let flutterApp = new Promise((resolve, reject) => {
-        _flutter.loader.loadEntrypoint({
-          onEntrypointLoaded: async function(engineInitializer) {
-            resetUi();
-            let engine = await engineInitializer.initializeEngine({
-              multiViewEnabled: true,
-            });
-            let app = engine.runApp();
-            resolve(app);
-          }
-        });
-      });
-
-      add_counter.addEventListener('click', async function() {
-        // Create a new element, and add a flutter view there...
-        let newElement = document.createElement('div');
-        newElement.classList.add('counter_cel');
-        counter_grid.appendChild(newElement);
-
-        let viewId = await (await flutterApp).addView({
-          hostElement: newElement,
-          initialData: {
-            randomInt: Math.floor(Math.random() * 100),
-            randomUUID: globalThis.crypto.randomUUID(),
-            decimals: [Math.PI, Math.E, Math.SQRT2],
-          },
-        });
-
-        viewIds.push(viewId);
-        console.log('Added view ID', viewId);
-        // Handle enabling/disabling the remove_last button
-        remove_last_counter.disabled = viewIds.length == 0;
-      });
-
-      remove_last_counter.addEventListener('click', async function() {
-        let viewId = viewIds.pop();
-
-        if (viewId) {
-          let viewConfig = await (await flutterApp).removeView(viewId);
-          console.log('Removing view with ID', viewId, 'and config', viewConfig);
-          viewConfig.hostElement.remove();
-        }
-        // Handle enabling/disabling the remove_last button
-        remove_last_counter.disabled = viewIds.length == 0;
-      });
     });
   </script>
 </body>
