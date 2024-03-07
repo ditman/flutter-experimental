@@ -2,15 +2,25 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 import 'package:flutter/material.dart';
+import 'src/focusable.dart';
 import 'src/initial_data.dart';
 import 'src/multiview.dart';
 
 final List<Color> colors = List.from(Colors.primaries)..shuffle();
 
 void main() {
-  runWidget(MultiViewApp(
-    viewBuilder: (BuildContext context) => const Counter(),
+
+  // Neither seem to work? How to integrate FocusableApp with MultiViewApp correctly?
+
+  runWidget(FocusableApp(
+    child: MultiViewApp(
+      viewBuilder: (BuildContext context) => const Counter(),
+    ),
   ));
+
+  // runWidget(MultiViewApp(
+  //   viewBuilder: (BuildContext context) => const FocusableApp(child: Counter()),
+  // ));
 }
 
 class Counter extends StatelessWidget {
