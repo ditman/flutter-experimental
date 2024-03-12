@@ -1,5 +1,6 @@
-{{flutter_js}}
 {{flutter_build_config}}
+
+{{flutter_js}}
 
 let viewIds = [];
 
@@ -35,6 +36,12 @@ add_counter.addEventListener('click', async function() {
       randomInt: Math.floor(Math.random() * 100),
       randomUUID: globalThis.crypto.randomUUID(),
       decimals: [Math.PI, Math.E, Math.SQRT2],
+    },
+    viewConstraints: {
+      maxWidth: 320,
+      maxHeight: 240,
+      minWidth: 320,
+      minHeight: 240,
     },
   });
 
