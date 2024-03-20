@@ -1,0 +1,24 @@
+name: multi_list
+description: 'A multi-view example app for the web.'
+publish_to: 'none'
+
+environment:
+  sdk: ^3.3.0
+  flutter: '>=3.19.0'
+
+dependencies:
+  cupertino_icons: ^1.0.6
+  english_words: ^4.0.0
+  flutter:
+    sdk: flutter
+  web: ^0.5.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+  # assets:
+  #   - images/a_dot_burr.jpeg
