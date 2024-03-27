@@ -94,6 +94,7 @@
         onEntrypointLoaded: async function(engineInitializer) {
           let engine = await engineInitializer.initializeEngine({
             multiViewEnabled: true,
+            renderer: 'canvaskit',
           });
           let app = await engine.runApp();
           addView.addEventListener('click', () => {
