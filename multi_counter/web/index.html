@@ -4,7 +4,6 @@
   <base href="$FLUTTER_BASE_HREF">
 
   <meta charset="UTF-8">
-  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="Multi-counter web demo">
 
   <!-- iOS meta tags & icons -->
@@ -19,8 +18,6 @@
   <title>Multi-counter</title>
   <link rel="manifest" href="manifest.json">
 
-  <!-- This script adds the flutter initialization JS code -->
-  <script src="flutter.js" defer></script>
   <style>
     * { box-sizing: border-box; font-family: Helvetica, Arial, sans-serif; }
     .app_bar {
@@ -33,15 +30,13 @@
       top: 0px;
       z-index: 1;
     }
-    .counter_grid {
+    .grid {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       gap: 8px;
     }
-    .counter_cel {
-      width: 320px;
-      height: 240px;
+    .cel {
       box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2);
     }
   </style>
@@ -49,69 +44,14 @@
 <body>
   <nav class="app_bar">
     <h1>Multi-counter Demo</h1>
-    <div class="counter_manager">
-      <button id="add_counter" disabled>Add a counter</button>
-      <button id="remove_last_counter" disabled>Remove last counter</button>
+    <div class="crud">
+      <button id="adder" disabled>Add a counter</button>
+      <button id="remover" disabled>Remove last counter</button>
     </div>
   </nav>
-  <div class="counter_grid" id="counter_grid"></div>
+  <div class="grid" id="grid"></div>
   <script>
-    window.addEventListener('load', function(ev) {
-      let viewIds = [];
-
-      function resetUi() {
-        viewIds = [];
-        counter_grid.replaceChildren();
-        remove_last_counter.disabled = true;
-        add_counter.disabled = false;
-      }
-
-      let flutterApp = new Promise((resolve, reject) => {
-        _flutter.loader.loadEntrypoint({
-          onEntrypointLoaded: async function(engineInitializer) {
-            resetUi();
-            let engine = await engineInitializer.initializeEngine({
-              multiViewEnabled: true,
-            });
-            let app = engine.runApp();
-            resolve(app);
-          }
-        });
-      });
-
-      add_counter.addEventListener('click', async function() {
-        // Create a new element, and add a flutter view there...
-        let newElement = document.createElement('div');
-        newElement.classList.add('counter_cel');
-        counter_grid.appendChild(newElement);
-
-        let viewId = await (await flutterApp).addView({
-          hostElement: newElement,
-          initialData: {
-            randomInt: Math.floor(Math.random() * 100),
-            randomUUID: globalThis.crypto.randomUUID(),
-            decimals: [Math.PI, Math.E, Math.SQRT2],
-          },
-        });
-
-        viewIds.push(viewId);
-        console.log('Added view ID', viewId);
-        // Handle enabling/disabling the remove_last button
-        remove_last_counter.disabled = viewIds.length == 0;
-      });
-
-      remove_last_counter.addEventListener('click', async function() {
-        let viewId = viewIds.pop();
-
-        if (viewId) {
-          let viewConfig = await (await flutterApp).removeView(viewId);
-          console.log('Removing view with ID', viewId, 'and config', viewConfig);
-          viewConfig.hostElement.remove();
-        }
-        // Handle enabling/disabling the remove_last button
-        remove_last_counter.disabled = viewIds.length == 0;
-      });
-    });
+    {{flutter_bootstrap_js}}
   </script>
 </body>
 </html>
