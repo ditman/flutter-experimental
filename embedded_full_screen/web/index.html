@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base href="$FLUTTER_BASE_HREF">
+
+  <meta charset="UTF-8">
+  <meta name="description" content="A new Flutter project.">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="embedded_full_screen">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>embedded_full_screen</title>
+  <script src="flutter.js" defer></script>
+  <style>
+    .fill-screen {
+      /* Flexbox could also be an option! */
+      position: absolute;
+      top: 0; bottom: 0; left: 0; right: 0;
+      overflow: hidden;
+      background: red;
+    }
+  </style>
+</head>
+<body>
+  <div id="flutterHost" class="fill-screen"></div>
+  <script>
+    window.addEventListener('load', function (ev) {
+      _flutter.loader.loadEntrypoint({
+        onEntrypointLoaded: async function(engineInitializer) {
+          // https://docs.flutter.dev/platform-integration/web/initialization
+          let appRunner = await engineInitializer.initializeEngine({
+            hostElement: flutterHost,
+          });
+          await appRunner.runApp();
+        }
+      });
+    });
+  </script>
+</body>
+</html>
