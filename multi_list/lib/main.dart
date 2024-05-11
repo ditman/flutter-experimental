@@ -41,6 +41,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final ScrollController scrollController = ScrollController();
   final List<String> _names = <String>[];
 
   @override
@@ -71,7 +72,9 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: _names.isNotEmpty
           ? Scrollbar(
+              controller: scrollController,
               child: ListView.separated(
+                controller: scrollController,
                 itemCount: _names.length,
                 separatorBuilder: (context, index) => const Divider(),
                 itemBuilder: (context, index) => ListTile(
