@@ -4,7 +4,6 @@
   <base href="$FLUTTER_BASE_HREF">
 
   <meta charset="UTF-8">
-  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="Multi-map web demo">
 
   <!-- iOS meta tags & icons -->
@@ -21,8 +20,6 @@
   
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBYsDdi5vYcoQoxqkEVrM-8QQI45rieMUA"></script>
 
-  <!-- This script adds the flutter initialization JS code -->
-  <script src="flutter.js" defer></script>
   <style>
     * { box-sizing: border-box; font-family: Helvetica, Arial, sans-serif; }
     html { background:url(topo-pattern.png) repeat; }
@@ -58,59 +55,9 @@
     </div>
   </nav>
   <div class="map_grid" id="map_grid"></div>
+  <!-- This script inlines the flutter initialization JS code -->
   <script>
-    window.addEventListener('load', function(ev) {
-      let viewIds = [];
-
-      function resetUi() {
-        viewIds = [];
-        map_grid.replaceChildren();
-        remove_last_map.disabled = true;
-        add_map.disabled = false;
-      }
-
-      let flutterApp = new Promise((resolve, reject) => {
-        _flutter.loader.loadEntrypoint({
-          onEntrypointLoaded: async function(engineInitializer) {
-            resetUi();
-            let engine = await engineInitializer.initializeEngine({
-              multiViewEnabled: true,
-              renderer: 'canvaskit',
-            });
-            let app = engine.runApp();
-            resolve(app);
-          }
-        });
-      });
-
-      add_map.addEventListener('click', async function() {
-        // Create a new element, and add a flutter view there...
-        let newElement = document.createElement('div');
-        newElement.classList.add('map_cel');
-        map_grid.appendChild(newElement);
-
-        let viewId = await (await flutterApp).addView({
-          hostElement: newElement,
-        });
-
-        viewIds.push(viewId);
-        console.log('Added view ID', viewId);
-        // Handle enabling/disabling the remove_last button
-        remove_last_map.disabled = viewIds.length == 0;
-      });
-
-      remove_last_map.addEventListener('click', async function() {
-        let viewId = viewIds.pop();
-
-        if (viewId) {
-          let viewConfig = await (await flutterApp).removeView(viewId);
-          console.log('Removing view with ID', viewId, 'and config', viewConfig);
-          viewConfig.hostElement.remove();
-        }
-        // Handle enabling/disabling the remove_last button
-        remove_last_map.disabled = viewIds.length == 0;
-      });
-    });
+    {{flutter_bootstrap_js}}
   </script>
 </body>
 </html>
