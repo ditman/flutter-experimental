@@ -23,7 +23,8 @@ class Counter extends StatelessWidget {
     return MaterialApp(
       title: 'Multi-counter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: colors[viewId%colors.length]),
+        colorScheme:
+            ColorScheme.fromSeed(seedColor: colors[viewId % colors.length]),
         useMaterial3: true,
       ),
       home: MyHomePage(title: 'Counter View $viewId', data: data),
@@ -58,11 +59,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final String uuidFromJs = widget.data?.randomUUID ?? 'null (Browser crypto not available?)';
+    final String uuidFromJs =
+        widget.data?.randomUUID ?? 'null (Browser crypto not available?)';
 
     final TextStyle? tiny = Theme.of(context).textTheme.bodySmall?.copyWith(
-      color: Theme.of(context).colorScheme.secondary.withOpacity(0.5),
-    );
+          color: Theme.of(context).colorScheme.secondary.withOpacity(0.5),
+        );
     final TextStyle? tinyBold = tiny?.copyWith(
       fontWeight: FontWeight.bold,
     );

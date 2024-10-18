@@ -19,7 +19,8 @@ class MultiViewApp extends StatefulWidget {
   State<MultiViewApp> createState() => _MultiViewAppState();
 }
 
-class _MultiViewAppState extends State<MultiViewApp> with WidgetsBindingObserver {
+class _MultiViewAppState extends State<MultiViewApp>
+    with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
@@ -44,7 +45,8 @@ class _MultiViewAppState extends State<MultiViewApp> with WidgetsBindingObserver
 
   void _updateViews() {
     final Map<Object, Widget> newViews = <Object, Widget>{};
-    for (final FlutterView view in WidgetsBinding.instance.platformDispatcher.views) {
+    for (final FlutterView view
+        in WidgetsBinding.instance.platformDispatcher.views) {
       final Widget viewWidget = _views[view.viewId] ?? _createViewWidget(view);
       newViews[view.viewId] = viewWidget;
     }

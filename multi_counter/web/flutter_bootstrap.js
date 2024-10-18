@@ -1,5 +1,4 @@
 {{flutter_build_config}}
-
 {{flutter_js}}
 
 let viewIds = [];
