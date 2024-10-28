@@ -1,6 +1,6 @@
 {
-    "name": "fluttercon_latam_demo",
-    "short_name": "fluttercon_latam_demo",
+    "name": "flutterconf_latam_demo",
+    "short_name": "flutterconf_latam_demo",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

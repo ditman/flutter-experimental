@@ -1,4 +1,4 @@
-# fluttercon_latam_demo
+# flutterconf_latam_demo
 
 A new Flutter project.
 

@@ -23,16 +23,26 @@
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="fluttercon_latam_demo">
+  <meta name="apple-mobile-web-app-title" content="flutterconf_latam_demo">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png"/>
 
-  <title>fluttercon_latam_demo</title>
+  <title>flutterconf_latam_demo</title>
   <link rel="manifest" href="manifest.json">
 </head>
 <body>
-  <script src="flutter_bootstrap.js" async></script>
+  <nav class="app_bar">
+    <h1>FlutterConf Latam Demo</h1>
+    <div class="crud">
+      <button id="adder" disabled>Add a counter</button>
+      <button id="remover" disabled>Remove last counter</button>
+    </div>
+  </nav>
+  <div class="grid" id="grid"></div>
+  <script>
+    {{flutter_bootstrap_js}}
+  </script>
 </body>
 </html>
