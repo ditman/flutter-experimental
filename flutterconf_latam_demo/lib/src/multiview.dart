@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// See https://github.com/goderbauer/mvp/blob/main/lib/src/widgets.dart
+// See https://docs.flutter.dev/platform-integration/web/embedding-flutter-web#embedded-mode
 
 import 'dart:ui' show FlutterView;
 

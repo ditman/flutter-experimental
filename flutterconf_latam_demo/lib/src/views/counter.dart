@@ -3,8 +3,9 @@
 // found in the LICENSE file.
 import 'package:flutter/material.dart';
 
-import '../initial_data.dart';
+import '../js_interop/initial_data.dart';
 
+/// Renders the classic Flutter counter (with some extra data coming from JS).
 class Counter extends StatefulWidget {
   const Counter({super.key, this.data});
 

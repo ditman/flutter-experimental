@@ -7,14 +7,8 @@
 {{flutter_build_config}}
 {{flutter_js}}
 
+// A collection of the active view Ids.
 let viewIds = [];
-
-function resetUi() {
-  viewIds = [];
-  grid.replaceChildren();
-  document.querySelectorAll('.adder').forEach((e) => e.disabled = false);
-  remover.disabled = true;
-}
 
 let flutterApp = new Promise((resolve, _) => {
   _flutter.loader.load({
@@ -29,6 +23,7 @@ let flutterApp = new Promise((resolve, _) => {
   });
 });
 
+// Handle button clicks
 crud.addEventListener('click', async function(event) {
   const button = event.target;
   if (button.matches('.adder')) {
@@ -40,17 +35,19 @@ crud.addEventListener('click', async function(event) {
       initialData['randomUUID'] = globalThis.crypto.randomUUID();
     }
     addView(initialData);
-  } else {
+  } else if (button.matches('.remover')) {
     removeLastView();
   }
 });
 
+// Adds a view with `initialData`.
 async function addView(initialData) {
-  // Create a new element, and add a flutter view there...
+  // Inject a new container for the view
   let newElement = document.createElement('div');
   newElement.classList.add('cel');
   grid.appendChild(newElement);
 
+  // Add the view to Flutter.
   let viewId = (await flutterApp).addView({
     hostElement: newElement,
     initialData: initialData,
@@ -62,12 +59,13 @@ async function addView(initialData) {
     }
   });
 
+  // Remember the viewId for later.
   viewIds.push(viewId);
   console.log('Added view ID', viewId, initialData);
-  // Handle enabling/disabling the remove_last button
   remover.disabled = viewIds.length == 0;
 }
 
+// Removes the last view from `viewIds`.
 async function removeLastView() {
   let viewId = viewIds.pop();
 
@@ -76,6 +74,13 @@ async function removeLastView() {
     console.log('Removed view ID', viewId, viewConfig);
     viewConfig.hostElement.remove();
   }
-  // Handle enabling/disabling the remove_last button
   remover.disabled = viewIds.length == 0;
+}
+
+// (Re)initialize the UI of the app.
+function resetUi() {
+  viewIds = [];
+  grid.replaceChildren();
+  document.querySelectorAll('.adder').forEach((e) => e.disabled = false);
+  remover.disabled = true;
 }

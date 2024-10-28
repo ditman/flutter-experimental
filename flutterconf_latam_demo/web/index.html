@@ -23,7 +23,7 @@
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="flutterconf_latam_demo">
+  <meta name="apple-mobile-web-app-title" content="FlutterConf Latam Demo">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
   <!-- Favicon -->
@@ -32,7 +32,8 @@
   <title>FlutterConf Latam Demo</title>
   <link rel="manifest" href="manifest.json">
 
-<style>
+  <style>
+    /* Minimal styling */
     * { box-sizing: border-box; font-family: Helvetica, Arial, sans-serif; }
     .app_bar {
       display: flex;
@@ -53,7 +54,8 @@
     .cel {
       box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2);
     }
-  </style></head>
+  </style>
+</head>
 <body>
   <nav class="app_bar">
     <h1>FlutterConf Latam Demo</h1>
@@ -61,11 +63,12 @@
       <button class="adder" data-view-type="counter" disabled>+ Counter</button>
       <button class="adder" data-view-type="emoji" disabled>+ Emoji</button>
       <button class="adder" data-view-type="list" disabled>+ Words</button>
-      <button id="remover" disabled>Remove last view</button>
+      <button class="remover" id="remover" disabled>Remove last view</button>
     </div>
   </nav>
   <div class="grid" id="grid"></div>
   <script>
+    /* Inline the contents of flutter_bootstrap.js */
     {{flutter_bootstrap_js}}
   </script>
 </body>

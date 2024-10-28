@@ -4,12 +4,13 @@
 
 import 'package:flutter/material.dart';
 
-import 'src/initial_data.dart';
+import 'src/js_interop/initial_data.dart';
 import 'src/multiview.dart';
 import 'src/views/counter.dart';
 import 'src/views/emoji.dart';
 import 'src/views/words.dart';
 
+/// A randomized list of primary colors.
 final List<Color> colors = List.from(Colors.primaries)..shuffle();
 
 void main() {
@@ -18,6 +19,9 @@ void main() {
   ));
 }
 
+/// Selects the appropriate app to render in each flutter view.
+///
+/// (This doesn't need to be a widget, it can be a `viewBuilder` method.)
 class ViewSelector extends StatelessWidget {
   const ViewSelector({super.key});
 

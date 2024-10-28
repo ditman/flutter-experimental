@@ -13,7 +13,7 @@ class WordList extends StatefulWidget {
 }
 
 class _WordListState extends State<WordList> {
-  final ScrollController scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
   final List<String> _names = <String>[];
 
   @override
@@ -44,9 +44,9 @@ class _WordListState extends State<WordList> {
       ),
       body: _names.isNotEmpty
           ? Scrollbar(
-              controller: scrollController,
+              controller: _scrollController,
               child: ListView.separated(
-                controller: scrollController,
+                controller: _scrollController,
                 itemCount: _names.length,
                 separatorBuilder: (context, index) => const Divider(),
                 itemBuilder: (context, index) => ListTile(
