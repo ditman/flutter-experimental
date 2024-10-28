@@ -1,16 +1,21 @@
 # flutterconf_latam_demo
 
-A new Flutter project.
+Demo app for FlutterConf Latam 2024.
+
+This app demonstrates the following features:
+
+* Multi-View
+* Fast color emoji fallback
+* Wasm
+
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+To enable Wasm, compile with:
 
-A few resources to get you started if this is your first Flutter project:
+```
+flutter build web --wasm
+```
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Check the `firebase.json` file that enables COOP/COEP headers for Wasm GC when
+deploying to Firebase Hosting.
