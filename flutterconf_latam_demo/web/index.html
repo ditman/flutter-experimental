@@ -29,15 +29,39 @@
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png"/>
 
-  <title>flutterconf_latam_demo</title>
+  <title>FlutterConf Latam Demo</title>
   <link rel="manifest" href="manifest.json">
-</head>
+
+<style>
+    * { box-sizing: border-box; font-family: Helvetica, Arial, sans-serif; }
+    .app_bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.5);
+      position: sticky;
+      top: 0px;
+      z-index: 1;
+    }
+    .grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+    }
+    .cel {
+      box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2);
+    }
+  </style></head>
 <body>
   <nav class="app_bar">
     <h1>FlutterConf Latam Demo</h1>
-    <div class="crud">
-      <button id="adder" disabled>Add a counter</button>
-      <button id="remover" disabled>Remove last counter</button>
+    <div class="crud" id="crud">
+      <button class="adder" data-view-type="counter" disabled>+ Counter</button>
+      <button class="adder" data-view-type="emoji" disabled>+ Emoji</button>
+      <button class="adder" data-view-type="list" disabled>+ Words</button>
+      <button id="remover" disabled>Remove last view</button>
     </div>
   </nav>
   <div class="grid" id="grid"></div>
