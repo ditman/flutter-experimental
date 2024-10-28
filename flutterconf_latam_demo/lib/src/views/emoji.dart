@@ -10,7 +10,7 @@ final EmojiParser _emojiParser = EmojiParser();
 
 /// Renders a random emoji with its name.
 class BigEmoji extends StatefulWidget {
-  const BigEmoji({ super.key });
+  const BigEmoji({super.key});
 
   @override
   State<BigEmoji> createState() => _BigEmojiState();
@@ -61,7 +61,10 @@ class _BigEmojiState extends State<BigEmoji> {
             ),
             Text(_emoji.name),
             Text(
-              _emojiRunes.map((int code) => '0x' + code.toRadixString(16).padLeft(4, '0')).join(', '),
+              _emojiRunes
+                  .map((int code) =>
+                      '0x' + code.toRadixString(16).padLeft(4, '0'))
+                  .join(', '),
               style: Theme.of(context).textTheme.bodySmall,
             )
           ],

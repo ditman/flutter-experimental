@@ -13,6 +13,7 @@ extension type InitialData._(JSObject _) implements JSObject {
   static InitialData? forView(int viewId) {
     return ui_web.views.getInitialData(viewId) as InitialData?;
   }
+
   @JS('viewType')
   external JSString get _viewType;
 }
@@ -27,6 +28,7 @@ extension type CounterInitialData._(InitialData _) implements InitialData {
 extension InitialDataDartGetters on InitialData {
   /// The view type to render.
   ViewType get viewType => ViewType.values.byName(_viewType.toDart);
+
   /// Returns a [Map]-like version of this object.
   Object? get toDart => dartify();
 }

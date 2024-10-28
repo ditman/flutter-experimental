@@ -35,8 +35,8 @@ class ViewSelector extends StatelessWidget {
     return MaterialApp(
       title: 'FlutterConf Latam Demo',
       theme: ThemeData(
-        colorScheme:
-            ColorScheme.fromSeed(seedColor: colors[viewId % colors.length])),
+          colorScheme:
+              ColorScheme.fromSeed(seedColor: colors[viewId % colors.length])),
       home: switch (data!.viewType) {
         ViewType.counter => Counter(data: data as CounterInitialData),
         ViewType.list => WordList(),

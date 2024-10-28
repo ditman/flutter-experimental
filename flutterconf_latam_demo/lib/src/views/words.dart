@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 /// Renders a scrollable list of random words.
 class WordList extends StatefulWidget {
-  const WordList({ super.key });
+  const WordList({super.key});
 
   @override
   State<WordList> createState() => _WordListState();
@@ -40,7 +40,8 @@ class _WordListState extends State<WordList> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text('${_names.length} Word List (id#${View.of(context).viewId})'),
+        title:
+            Text('${_names.length} Word List (id#${View.of(context).viewId})'),
       ),
       body: _names.isNotEmpty
           ? Scrollbar(
