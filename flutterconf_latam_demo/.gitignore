@@ -1,4 +1,6 @@
 pubspec.lock
+.firebase/
+.firebaserc
 
 # Miscellaneous
 *.class
