@@ -14,8 +14,13 @@ This app demonstrates the following features:
 To enable Wasm, compile with:
 
 ```
-flutter build web --wasm
+$ flutter build web --wasm
 ```
 
-Check the `firebase.json` file that enables COOP/COEP headers for Wasm GC when
-deploying to Firebase Hosting.
+This project has a pre-configured `firebase.json` that compiles the app with
+`--wasm` and configures COOP/COEP in Firebase Hosting. The following command
+_Should Just Work_:
+
+```
+$ firebase deploy
+```
