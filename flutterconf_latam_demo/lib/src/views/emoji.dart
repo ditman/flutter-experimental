@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_emoji/flutter_emoji.dart';
 
@@ -17,8 +18,10 @@ class BigEmoji extends StatefulWidget {
 }
 
 class _BigEmojiState extends State<BigEmoji> {
-  late List<int> _emojiRunes;
   late Emoji _emoji;
+
+  // Remove 0xFE0F from _emoji.code
+  String get _cleanEmojiCode => EmojiUtil.stripNSM(_emoji.code)!;
 
   @override
   void initState() {
@@ -27,17 +30,22 @@ class _BigEmojiState extends State<BigEmoji> {
   }
 
   void _updateEmoji() {
-    // My _getRandomEmoji method is not great, and some times generates `Emoji.None`.
-    // Loop until we get a next valid (and different) emoji :)
+    // My _getRandomEmoji method is not great. Some times it generates `Emoji.None`.
+    // Loop until we get a valid (and different) emoji :)
+    int attempts = 0;
     do {
-      _emojiRunes = _getRandomEmoji();
-      _emoji = _emojiParser.getEmoji(String.fromCharCodes(_emojiRunes));
+      _emoji = _emojiParser.getEmoji(String.fromCharCodes(_getRandomEmoji()));
+      attempts++;
     } while (_emoji == Emoji.None);
+    // Let's see how bad it is :)
+    if (kDebugMode && attempts > 10) {
+      print('Emoji found in ${attempts} attempts.');
+    }
   }
 
   List<int> _getRandomEmoji() {
     // See: https://unicode.org/Public/emoji/16.0/emoji-sequences.txt
-    return [Random().nextInt(0xFF) + 0x1F300];
+    return [Random().nextInt(0x3FF) + 0x1F300];
   }
 
   void _changeEmoji() {
@@ -56,12 +64,12 @@ class _BigEmojiState extends State<BigEmoji> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              EmojiUtil.stripNSM(_emoji.code)!, // Do not render 0xFE0F
+              _cleanEmojiCode,
               style: Theme.of(context).textTheme.displayLarge,
             ),
             Text(_emoji.name),
             Text(
-              _emojiRunes
+              _cleanEmojiCode.codeUnits
                   .map((int code) =>
                       '0x' + code.toRadixString(16).padLeft(4, '0'))
                   .join(', '),
