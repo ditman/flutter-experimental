@@ -56,7 +56,7 @@ class _BigEmojiState extends State<BigEmoji> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              _emoji.code,
+              EmojiUtil.stripNSM(_emoji.code)!, // Do not render 0xFE0F
               style: Theme.of(context).textTheme.displayLarge,
             ),
             Text(_emoji.name),
