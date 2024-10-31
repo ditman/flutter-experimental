@@ -17,7 +17,6 @@ let flutterApp = new Promise((resolve, reject) => {
       resetUi();
       let engine = await engineInitializer.initializeEngine({
         multiViewEnabled: true,
-        renderer: 'canvaskit',
       });
       let app = engine.runApp();
       resolve(app);
