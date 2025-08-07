@@ -58,6 +58,49 @@
     /* To make content flex, and scrollable, we need to calc its height. */
     height: calc(100vh - 118px);
     overflow-y: auto;
+    position: relative;
+  }
+  #flipsum-container {
+    position: absolute;
+    z-index: 10;
+    background-color: #f1f1f1;
+    border: 1px solid #d3d3d3;
+  }
+  .resizer {
+    width: 10px;
+    height: 10px;
+    background: #2196F3;
+    position:absolute;
+  }
+  .top-left {
+    left: -5px;
+    top: -5px;
+    cursor: nwse-resize;
+  }
+  .top-right {
+    right: -5px;
+    top: -5px;
+    cursor: nesw-resize;
+  }
+  .bottom-left {
+    left: -5px;
+    bottom: -5px;
+    cursor: nesw-resize;
+  }
+  .bottom-right {
+    right: -5px;
+    bottom: -5px;
+    cursor: nwse-resize;
+  }
+  #flipsum-header {
+    padding: 10px;
+    cursor: move;
+    z-index: 11;
+    background-color: #2196F3;
+    color: white;
+  }
+  #flipsum {
+    background-color: white;
   }
   aside, content { padding: 10px; }
   nav, footer { padding: 0px 10px; background: #fabada; }
@@ -74,10 +117,17 @@
     <aside>Side</aside>
     <content>
       <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Read some <em>Lorem Ipsum</em> text rendered by Flutter below:</p>
-      <div id="flipsum" class="flutter-app">
-        <center>
-          <button id="addView" disabled>Initializing Flutter...</button>
-        </center>
+      <div id="flipsum-container">
+        <div id="flipsum-header">Drag Me</div>
+        <div id="flipsum" class="flutter-app">
+          <center>
+            <button id="addView" disabled>Initializing Flutter...</button>
+          </center>
+        </div>
+        <div class='resizer top-left'></div>
+        <div class='resizer top-right'></div>
+        <div class='resizer bottom-left'></div>
+        <div class='resizer bottom-right'></div>
       </div>
       <p>That was some nice Lorem ipsum!</p>
       <p><small><em>Why not selectable?</em> <a href="https://github.com/flutter/flutter/issues/137875">WIP!</a></small></p>
@@ -87,6 +137,104 @@
       <p>A footer.</p>
     </footer>
   </div>
+
+  <script>
+    const dragElement = document.getElementById("flipsum-container");
+    const dragHandle = document.getElementById("flipsum-header");
+    const container = document.querySelector("content");
+
+    let active = false;
+    let currentX;
+    let currentY;
+    let initialX;
+    let initialY;
+    let xOffset = 0;
+    let yOffset = 0;
+
+    dragHandle.addEventListener("mousedown", dragStart, false);
+    document.addEventListener("mouseup", dragEnd, false);
+    document.addEventListener("mousemove", drag, false);
+
+    function dragStart(e) {
+      e.preventDefault();
+      initialX = e.clientX - xOffset;
+      initialY = e.clientY - yOffset;
+      active = true;
+    }
+
+    function dragEnd(e) {
+      initialX = currentX;
+      initialY = currentY;
+      active = false;
+    }
+
+    function drag(e) {
+      if (active) {
+        e.preventDefault();
+      
+        currentX = e.clientX - initialX;
+        currentY = e.clientY - initialY;
+
+        xOffset = currentX;
+        yOffset = currentY;
+
+        setTranslate(currentX, currentY, dragElement);
+      }
+    }
+
+    function setTranslate(xPos, yPos, el) {
+      el.style.transform = "translate3d(" + xPos + "px, " + yPos + "px, 0)";
+    }
+
+    const resizers = document.querySelectorAll('.resizer')
+    let currentResizer
+
+    for (let resizer of resizers) {
+      resizer.addEventListener('mousedown', mousedown)
+
+      function mousedown(e) {
+        currentResizer = e.target
+        isResizing = true
+
+        let prevX = e.clientX
+        let prevY = e.clientY
+
+        window.addEventListener('mousemove', mousemove)
+        window.addEventListener('mouseup', mouseup)
+
+        function mousemove(e) {
+          const rect = dragElement.getBoundingClientRect()
+
+          if (currentResizer.classList.contains('bottom-right')) {
+            dragElement.style.width = rect.width - (prevX - e.clientX) + 'px'
+            dragElement.style.height = rect.height - (prevY - e.clientY) + 'px'
+          } else if (currentResizer.classList.contains('bottom-left')) {
+            dragElement.style.width = rect.width + (prevX - e.clientX) + 'px'
+            dragElement.style.height = rect.height - (prevY - e.clientY) + 'px'
+            dragElement.style.left = rect.left - (prevX - e.clientX) + 'px'
+          } else if (currentResizer.classList.contains('top-right')) {
+            dragElement.style.width = rect.width - (prevX - e.clientX) + 'px'
+            dragElement.style.height = rect.height + (prevY - e.clientY) + 'px'
+            dragElement.style.top = rect.top - (prevY - e.clientY) + 'px'
+          } else {
+            dragElement.style.width = rect.width + (prevX - e.clientX) + 'px'
+            dragElement.style.height = rect.height + (prevY - e.clientY) + 'px'
+            dragElement.style.top = rect.top - (prevY - e.clientY) + 'px'
+            dragElement.style.left = rect.left - (prevX - e.clientX) + 'px'
+          }
+
+          prevX = e.clientX
+          prevY = e.clientY
+        }
+
+        function mouseup() {
+          window.removeEventListener('mousemove', mousemove)
+          window.removeEventListener('mouseup', mouseup)
+          isResizing = false
+        }
+      }
+    }
+  </script>
 
   <script>
     window.addEventListener('load', function(ev) {
@@ -100,10 +248,6 @@
           addView.addEventListener('click', () => {
             app.addView({
               hostElement: flipsum,
-              viewConstraints: {
-                minHeight: 0,
-                maxHeight: Infinity,
-              }
             });
           });
           addView.innerText = 'Add View';
