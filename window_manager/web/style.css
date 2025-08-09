@@ -1,0 +1,85 @@
+:root {
+  --window-color: #2196F3;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+.app_bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.5);
+  padding: 0px 16px;
+  flex: 0;
+}
+
+.desktop {
+  flex: 1;
+  background-color:hsla(187,0%,100%,1);
+  background-image:
+  radial-gradient(at 16% 71%, hsla(198,89%,66%,1) 0px, transparent 50%),
+  radial-gradient(at 51% 0%, hsla(198,89%,57%,1) 0px, transparent 50%),
+  radial-gradient(at 99% 98%, hsla(206,93%,31%,1) 0px, transparent 50%);
+}
+
+.draggable {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.window {
+  display: flex;
+  flex-direction: column;
+  height: 480px;
+  width: 320px;
+  resize: both;
+  overflow: hidden;
+  border: 1px solid var(--window-color);
+  box-shadow: 2px 2px 6px 4px rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+}
+
+.window .title_bar {
+  cursor: move;
+  background-color: var(--window-color);
+  color: white;
+  display: flex;
+  justify-content: space-between;
+}
+
+.window .title_bar span {
+  padding: 8px;
+}
+
+.window .flutter {
+  flex: 1;
+  overflow: hidden;
+}
+
+.gh-link {
+  display: inline-block;
+  vertical-align: middle;
+  color: #333;
+  transition: color .1s;
+}
+
+.gh-link:hover {
+  color: #09f;
+}
