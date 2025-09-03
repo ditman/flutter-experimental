@@ -41,10 +41,10 @@ crud.addEventListener('click', async function(event) {
 });
 
 /**
- * An ever-incrementing initial window offset designed to avoid windows popping
- * up smack on top of each other.
+ * An ever-incrementing window index used to avoid windows popping up smack on
+ * top of each other.
  */
-let initialWindowOffset = 10;
+let windowIndex = 0;
 
 /**
  * Add a view with "initialData".
@@ -69,9 +69,16 @@ async function addView(initialData) {
   prepareZIndex(new_window);
   // Attach close button
   prepareCloseButton(new_window, viewId);
+
   // Set initial window position
-  new_window.querySelector('.window').style.transform = `translate3d(${initialWindowOffset}px, ${initialWindowOffset}px, 0)`;
-  initialWindowOffset += 20;
+  const columns = 7;
+  let column = windowIndex % columns;
+  let row = (windowIndex - column) / columns;
+
+  let initialWindowOffsetX = 10 + column * 50;
+  let initialWindowOffsetY = 10 + row * 100 + column * 10;
+  new_window.querySelector('.window').style.transform = `translate3d(${initialWindowOffsetX}px, ${initialWindowOffsetY}px, 0)`;
+  windowIndex += 1;
 
   // Add the window to the desktop
   desktop.appendChild(new_window);
