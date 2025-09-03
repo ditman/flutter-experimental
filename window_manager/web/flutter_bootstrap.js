@@ -41,6 +41,12 @@ crud.addEventListener('click', async function(event) {
 });
 
 /**
+ * An ever-incrementing initial window offset designed to avoid windows popping
+ * up smack on top of each other.
+ */
+let initialWindowOffset = 10;
+
+/**
  * Add a view with "initialData".
  *
  * @see lib/src/js_interop/initial_data.dart
@@ -63,6 +69,9 @@ async function addView(initialData) {
   prepareZIndex(new_window);
   // Attach close button
   prepareCloseButton(new_window, viewId);
+  // Set initial window position
+  new_window.querySelector('.window').style.transform = `translate3d(${initialWindowOffset}px, ${initialWindowOffset}px, 0)`;
+  initialWindowOffset += 20;
 
   // Add the window to the desktop
   desktop.appendChild(new_window);
@@ -98,7 +107,7 @@ function prepareZIndex(fl_window) {
   zIndex.registerElement(window_body);
 }
 
-/** 
+/**
  * (Re)initialize the UI of the app.
  */
 function resetUi() {
@@ -132,7 +141,7 @@ class DragHandler {
   offsetY;
   dragElement = null;
   active = false;
-  
+
   constructor() {
     document.addEventListener("mouseup", this.dragEnd.bind(this), false);
     document.addEventListener("mousemove", this.drag.bind(this), false);
