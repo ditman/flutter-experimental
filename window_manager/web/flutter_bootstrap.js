@@ -41,6 +41,12 @@ crud.addEventListener('click', async function(event) {
 });
 
 /**
+ * An ever-incrementing window index used to avoid windows popping up smack on
+ * top of each other.
+ */
+let windowIndex = 0;
+
+/**
  * Add a view with "initialData".
  *
  * @see lib/src/js_interop/initial_data.dart
@@ -63,6 +69,16 @@ async function addView(initialData) {
   prepareZIndex(new_window);
   // Attach close button
   prepareCloseButton(new_window, viewId);
+
+  // Set initial window position
+  const columns = 7;
+  let column = windowIndex % columns;
+  let row = (windowIndex - column) / columns;
+
+  let initialWindowOffsetX = 10 + column * 50;
+  let initialWindowOffsetY = 10 + row * 100 + column * 10;
+  new_window.querySelector('.window').style.transform = `translate3d(${initialWindowOffsetX}px, ${initialWindowOffsetY}px, 0)`;
+  windowIndex += 1;
 
   // Add the window to the desktop
   desktop.appendChild(new_window);
@@ -98,7 +114,7 @@ function prepareZIndex(fl_window) {
   zIndex.registerElement(window_body);
 }
 
-/** 
+/**
  * (Re)initialize the UI of the app.
  */
 function resetUi() {
@@ -132,7 +148,7 @@ class DragHandler {
   offsetY;
   dragElement = null;
   active = false;
-  
+
   constructor() {
     document.addEventListener("mouseup", this.dragEnd.bind(this), false);
     document.addEventListener("mousemove", this.drag.bind(this), false);
