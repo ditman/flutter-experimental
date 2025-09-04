@@ -18,10 +18,37 @@ let flutterApp = new Promise((resolve, _) => {
         multiViewEnabled: true,
       });
       let app = engine.runApp();
+
+      // Create a dummy invisible view to warm-up the framework.
+      await warmUpFramework(app);
+
       resolve(app);
     }
   });
 });
+
+let warmUpViewId = null;
+let warmUpViewTarget = null;
+
+async function warmUpFramework(appPromise) {
+  let initialData = {
+    viewType: "counter",
+    randomUUID: globalThis.crypto.randomUUID()
+  };
+
+  warmUpViewTarget = document.createElement('warm-up-view');
+  warmUpViewTarget.style.width = '500px';
+  warmUpViewTarget.style.height = '500px';
+  warmUpViewTarget.style.position = 'fixed';
+  warmUpViewTarget.style.top = '-10000px';
+  document.body.appendChild(warmUpViewTarget);
+
+  let app = await appPromise;
+  warmUpViewId = app.addView({
+    hostElement: warmUpViewTarget,
+    initialData: initialData
+  });
+}
 
 /**
  * Handle button clicks
@@ -52,13 +79,22 @@ let windowIndex = 0;
  * @see lib/src/js_interop/initial_data.dart
  */
 async function addView(initialData) {
+  let app = await flutterApp;
+
+  if (warmUpViewId) {
+    app.removeView(warmUpViewId);
+    warmUpViewTarget.remove();
+    warmUpViewId = null;
+    warmUpViewTarget = null;
+  }
+
   // Create the DOM for the new view from its template.
   let new_window = window_template.content.cloneNode(true);
   // Find the target where we want to inject flutter.
   let target = new_window.querySelector('.flutter');
 
   // Add the view to Flutter.
-  let viewId = (await flutterApp).addView({
+  let viewId = app.addView({
     hostElement: target,
     initialData: initialData
   });
