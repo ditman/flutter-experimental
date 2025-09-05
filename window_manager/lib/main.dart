@@ -6,9 +6,7 @@ import 'package:flutter/material.dart';
 
 import 'src/js_interop/initial_data.dart';
 import 'src/multiview.dart';
-import 'src/views/counter.dart';
-import 'src/views/emoji.dart';
-import 'src/views/words.dart';
+import 'src/views.dart';
 
 /// A randomized list of primary colors.
 final List<Color> colors = List.from(Colors.primaries)..shuffle();
@@ -33,7 +31,7 @@ class ViewSelector extends StatelessWidget {
     assert(data != null, 'initialData must not be null (on this app)!');
 
     return MaterialApp(
-      title: 'FlutterConf Latam Demo',
+      title: 'Flutter Apps',
       theme: ThemeData(
           colorScheme:
               ColorScheme.fromSeed(seedColor: colors[viewId % colors.length])),
@@ -41,6 +39,7 @@ class ViewSelector extends StatelessWidget {
         ViewType.counter => Counter(data: data as CounterInitialData),
         ViewType.list => WordList(),
         ViewType.emoji => BigEmoji(),
+        ViewType.warmup => Warmup(),
       },
     );
   }

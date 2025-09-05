@@ -17,38 +17,10 @@ let flutterApp = new Promise((resolve, _) => {
       let engine = await engineInitializer.initializeEngine({
         multiViewEnabled: true,
       });
-      let app = engine.runApp();
-
-      // Create a dummy invisible view to warm-up the framework.
-      await warmUpFramework(app);
-
-      resolve(app);
+      resolve(engine.runApp());
     }
   });
-});
-
-let warmUpViewId = null;
-let warmUpViewTarget = null;
-
-async function warmUpFramework(appPromise) {
-  let initialData = {
-    viewType: "counter",
-    randomUUID: globalThis.crypto.randomUUID()
-  };
-
-  warmUpViewTarget = document.createElement('warm-up-view');
-  warmUpViewTarget.style.width = '500px';
-  warmUpViewTarget.style.height = '500px';
-  warmUpViewTarget.style.position = 'fixed';
-  warmUpViewTarget.style.top = '-10000px';
-  document.body.appendChild(warmUpViewTarget);
-
-  let app = await appPromise;
-  warmUpViewId = app.addView({
-    hostElement: warmUpViewTarget,
-    initialData: initialData
-  });
-}
+}).then(warmUpFramework);
 
 /**
  * Handle button clicks
@@ -68,25 +40,12 @@ crud.addEventListener('click', async function(event) {
 });
 
 /**
- * An ever-incrementing window index used to avoid windows popping up smack on
- * top of each other.
- */
-let windowIndex = 0;
-
-/**
  * Add a view with "initialData".
  *
  * @see lib/src/js_interop/initial_data.dart
  */
 async function addView(initialData) {
   let app = await flutterApp;
-
-  if (warmUpViewId) {
-    app.removeView(warmUpViewId);
-    warmUpViewTarget.remove();
-    warmUpViewId = null;
-    warmUpViewTarget = null;
-  }
 
   // Create the DOM for the new view from its template.
   let new_window = window_template.content.cloneNode(true);
@@ -105,16 +64,6 @@ async function addView(initialData) {
   prepareZIndex(new_window);
   // Attach close button
   prepareCloseButton(new_window, viewId);
-
-  // Set initial window position
-  const columns = 7;
-  let column = windowIndex % columns;
-  let row = (windowIndex - column) / columns;
-
-  let initialWindowOffsetX = 10 + column * 50;
-  let initialWindowOffsetY = 10 + row * 100 + column * 10;
-  new_window.querySelector('.window').style.transform = `translate3d(${initialWindowOffsetX}px, ${initialWindowOffsetY}px, 0)`;
-  windowIndex += 1;
 
   // Add the window to the desktop
   desktop.appendChild(new_window);
@@ -158,6 +107,26 @@ function resetUi() {
   document.querySelectorAll('.adder').forEach((e) => e.disabled = false);
 }
 
+let warmUpViewId = null;
+// Adds a warmup view to the app, as soon as possible, so the framework is
+// ready to render the actual views when the user interacts.
+function warmUpFramework(app) {
+  let initialData = {
+    viewType: "warmup",
+  };
+
+  let warmUpViewTarget = document.createElement('div');
+  warmUpViewTarget.classList.add('warmup-view');
+  document.body.appendChild(warmUpViewTarget);
+
+  warmUpViewId = app.addView({
+    hostElement: warmUpViewTarget,
+    initialData: initialData
+  });
+
+  return app;
+}
+
 /**
  * A class to handle the z-index of our fakey window system.
  */
@@ -184,6 +153,9 @@ class DragHandler {
   offsetY;
   dragElement = null;
   active = false;
+  // An ever-incrementing window index used to stagger the position of windows.
+  // Used by computeInitialWindowPosition.
+  windowIndex = 0;
 
   constructor() {
     document.addEventListener("mouseup", this.dragEnd.bind(this), false);
@@ -191,6 +163,7 @@ class DragHandler {
   }
 
   registerElement(dragHandle) {
+    this.computeInitialWindowPosition(dragHandle.closest('.window'));
     dragHandle.addEventListener("mousedown", this.dragStart.bind(this), false);
   }
 
@@ -218,6 +191,20 @@ class DragHandler {
 
       this.setTranslate(currentX, currentY, this.dragElement);
     }
+  }
+
+  // Set a staggered initial window position
+  computeInitialWindowPosition(el) {
+    const columns = 10;
+
+    let column = this.windowIndex % columns;
+    let row = (this.windowIndex - column) / columns;
+
+    let initialWindowOffsetX = 10 + column * 50;
+    let initialWindowOffsetY = 10 + row * 100 + column * 10;
+
+    this.setTranslate(initialWindowOffsetX, initialWindowOffsetY, el);
+    this.windowIndex++;
   }
 
   setTranslate(xPos, yPos, el) {

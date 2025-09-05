@@ -42,7 +42,8 @@ extension CounterInitialDataGetters on CounterInitialData {
 enum ViewType {
   counter('counter'),
   emoji('emoji'),
-  list('list');
+  list('list'),
+  warmup('warmup');
 
   const ViewType(String viewType) : _viewType = viewType;
   final String _viewType;

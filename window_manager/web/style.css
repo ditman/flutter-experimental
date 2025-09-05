@@ -1,5 +1,6 @@
 :root {
   --window-color: #2196F3;
+  --window-background: #fff;
 }
 
 * {
@@ -51,6 +52,7 @@ body {
   width: 320px;
   resize: both;
   overflow: hidden;
+  background: var(--window-background);
   border: 1px solid var(--window-color);
   box-shadow: 2px 2px 6px 4px rgba(0, 0, 0, 0.15);
   border-radius: 4px;
@@ -82,4 +84,11 @@ body {
 
 .gh-link:hover {
   color: #09f;
+}
+
+.warmup-view {
+  position: absolute;
+  top: -1px;
+  width: 1px;
+  height: 1px;
 }
